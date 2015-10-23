@@ -23,7 +23,7 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
-        oLevel = 0,
+        oLevel,
         lastTime;
 
     canvas.width = 505;
@@ -87,9 +87,7 @@ var Engine = (function(global) {
         updateEntities(dt);
         var collision_flag = checkCollisions();
         if (collision_flag == 1){
-            allEnemies = [];
-            addNewEnemy(0);
-            oLevel = 0;
+            reset();
         }
     }
 
@@ -205,7 +203,9 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        allEnemies = [];
+        addNewEnemy(0);
+        oLevel = 0;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
