@@ -13,7 +13,7 @@
  * the canvas' context (ctx) object globally available to make writing app.js
  * a little simpler to work with.
  */
-
+/*anonymous function invoke itself*/
 var Engine = (function(global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
@@ -57,7 +57,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -80,7 +80,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -90,6 +90,15 @@ var Engine = (function(global) {
      * the data/properties related to  the object. Do your drawing in your
      * render methods.
      */
+    function checkCollisions(){
+        allEnemies.forEach(function(enemy){
+            if (player.y - enemy.y < 10){
+                if(Math.abs(player.x - enemy.x)<50){
+                    player.reset()
+                }
+            }
+        })
+    }
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
@@ -112,7 +121,7 @@ var Engine = (function(global) {
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
                 'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
+                'images/stone-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
             numRows = 6,
@@ -182,3 +191,4 @@ var Engine = (function(global) {
      */
     global.ctx = ctx;
 })(this);
+/* this is point to globe*/
