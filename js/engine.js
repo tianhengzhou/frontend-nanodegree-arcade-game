@@ -23,6 +23,7 @@ var Engine = (function(global) {
         win = global.window,
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
+        oLevel = 0,
         lastTime;
 
     canvas.width = 505;
@@ -79,8 +80,17 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
+        var levelpass = checkLocation();
+        if (levelpass == 1){
+            oLevel = levelUp(oLevel);
+        }
         updateEntities(dt);
-        checkCollisions();
+        var collision_flag = checkCollisions();
+        if (collision_flag == 1){
+            allEnemies = [];
+            addNewEnemy(0);
+            oLevel = 0;
+        }
     }
 
     /* This is called by the update function  and loops through all of the
@@ -91,13 +101,16 @@ var Engine = (function(global) {
      * render methods.
      */
     function checkCollisions(){
+        var collision_flag = 0;
         allEnemies.forEach(function(enemy){
-            if (player.y - enemy.y < 10){
-                if(Math.abs(player.x - enemy.x)<50){
-                    player.reset()
+            if (player.y - enemy.y < 40 && player.y - enemy.y > -50){
+                if(Math.abs(player.x - enemy.x)<60){
+                    player.reset();
+                    collision_flag = 1
                 }
             }
-        })
+        });
+        return collision_flag
     }
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
@@ -144,11 +157,34 @@ var Engine = (function(global) {
                 ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
-
-
+        ctx.font = "20px Arial";
+        ctx.fillText('Level: '+(oLevel+1).toString(),10,80);
+        ctx.strokeText('Check How Many Levels You Can Conquer',65,30);
         renderEntities();
     }
 
+    function levelUp(oLevel){
+        allEnemies.forEach(function(enemy){
+            enemy.speed += 25
+        });
+        addNewEnemy(50*(oLevel+1));
+        return oLevel+1
+    }
+
+    function checkLocation(){
+        var levelPass = 0;
+        if (player.y < 0){
+            player.reset();
+            levelPass = 1;
+        }
+        return levelPass
+    }
+
+    function addNewEnemy(speed){
+        var floor = Math.round(Math.random()*3+1);
+        var enemy = new Enemy(0,60+83*(floor-1),100+speed);
+        allEnemies.push(enemy)
+    }
     /* This function is called by the render function and is called on each game
      * tick. It's purpose is to then call the render functions you have defined
      * on your enemy and player entities within app.js
