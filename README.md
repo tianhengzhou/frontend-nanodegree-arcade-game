@@ -7,7 +7,6 @@ windows, download python from this link: https://www.python.org/downloads/window
 2. Change the directory to the project folder.
 3. Open a terminal or command line tool. Type python -m SimpleHTTPServer [port]
 4. Open a browser then type localhost:[port]
-5. This project had been submitted and hosted on Heroku.com. Link:
 
 ### How to Play
 
